@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace Stego_Stuff
 {
-    class StegoHandler
+    static class StegoHandler
     {
         //IMAGES ARE DEFINED AS COL, ROW
         

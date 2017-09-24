@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-namespace Stego_Stuff
+namespace OTPStuff
 {
     partial class ControlForm
     {
@@ -31,6 +31,8 @@ namespace Stego_Stuff
         {
             this.implantButton = new System.Windows.Forms.Button();
             this.extractButton = new System.Windows.Forms.Button();
+            this.implantOTPButton = new System.Windows.Forms.Button();
+            this.extractOTPButton = new System.Windows.Forms.Button();
             this.straightEncryptionButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -54,9 +56,29 @@ namespace Stego_Stuff
             this.extractButton.UseVisualStyleBackColor = true;
             this.extractButton.Click += new System.EventHandler(this.extractButton_Click);
             // 
+            // implantOTPButton
+            // 
+            this.implantOTPButton.Location = new System.Drawing.Point(100, 150);
+            this.implantOTPButton.Name = "implantOTPButton";
+            this.implantOTPButton.Size = new System.Drawing.Size(150, 50);
+            this.implantOTPButton.TabIndex = 5;
+            this.implantOTPButton.Text = "Implant w/ OTP";
+            this.implantOTPButton.UseVisualStyleBackColor = true;
+            this.implantOTPButton.Click += new System.EventHandler(this.implantOTPButton_Click);
+            // 
+            // extractOTPButton
+            // 
+            this.extractOTPButton.Location = new System.Drawing.Point(300, 150);
+            this.extractOTPButton.Name = "extractOTPButton";
+            this.extractOTPButton.Size = new System.Drawing.Size(150, 50);
+            this.extractOTPButton.TabIndex = 6;
+            this.extractOTPButton.Text = "Extract w/ OTP";
+            this.extractOTPButton.UseVisualStyleBackColor = true;
+            this.extractOTPButton.Click += new System.EventHandler(this.extractOTPButton_Click);
+            // 
             // straightEncryptionButton
             // 
-            this.straightEncryptionButton.Location = new System.Drawing.Point(200, 150);
+            this.straightEncryptionButton.Location = new System.Drawing.Point(200, 220);
             this.straightEncryptionButton.Name = "straightEncryptionButton";
             this.straightEncryptionButton.Size = new System.Drawing.Size(150, 50);
             this.straightEncryptionButton.TabIndex = 7;
@@ -68,10 +90,12 @@ namespace Stego_Stuff
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(550, 300);
+            this.ClientSize = new System.Drawing.Size(550, 370);
             this.Controls.Add(this.straightEncryptionButton);
             this.Controls.Add(this.extractButton);
             this.Controls.Add(this.implantButton);
+            this.Controls.Add(this.extractOTPButton);
+            this.Controls.Add(this.implantOTPButton);
             this.ForeColor = System.Drawing.Color.Black;
             this.Name = "ControlForm";
             this.Text = "Stegonography";
@@ -82,6 +106,8 @@ namespace Stego_Stuff
         #endregion
         private Button implantButton;
         private Button extractButton;
+        private Button implantOTPButton;
+        private Button extractOTPButton;
         private Button straightEncryptionButton;
     }
 }
