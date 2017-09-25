@@ -102,7 +102,7 @@ namespace OTPStuff
             else
             {
                 FileInfo f = new FileInfo(filePath);
-                if (f.Length > this.possibleSize)
+                if (f.Length > this.possibleSize-OTPHandler.EOF1_LENGTH-1) //have to leave room in the message for the OTP to hit the message.
                 {
                     return "Error: File size exceeds that available in image";
                 }
@@ -304,10 +304,16 @@ namespace OTPStuff
             byte[] OTP = OTPHandler.generateRandomBytes(StegoHandler.availableBytes(b.Width * b.Height));
 
             byte[] unencryptedMsg = File.ReadAllBytes(msgPath);
-            byte[] messageBytes = OTPHandler.addEOF(unencryptedMsg); //some nuances need to be resolved here when message approaches the length of the OTP.
-            byte[] encryptedMsg = AES.encryptionMain(password, messageBytes);
-            byte[] finalMessage=OTPHandler.getEncryptedMessage(OTP, encryptedMsg); //this saves to finalMessage.
 
+            if (unencryptedMsg.Length>OTP.Length-OTPHandler.EOF1_LENGTH-1)
+            {
+                SetPrimaryStatusLabelText("Error: Message cannot be longer than image can handle.");
+                return;
+            }
+            byte[] messageBytes = OTPHandler.addEOF(unencryptedMsg); //some nuances need to be resolved here when message approaches the length of the OTP.
+            //byte[] encryptedMsg = AES.encryptionMain(password, messageBytes);
+            byte[] finalMessage=OTPHandler.getEncryptedMessage(OTP, messageBytes); //this saves to finalMessage.
+            
             byte[] OTPwEOF = OTPHandler.addEOF(OTP);
             OTPwEOF=AES.encryptionMain(password, OTPwEOF);
             Console.WriteLine("Time to encryption: " + s.ElapsedMilliseconds);

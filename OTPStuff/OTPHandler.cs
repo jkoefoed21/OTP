@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace OTPStuff
 {
-    static class OTPHandler
+    static class OTPHandler //if I somehow converted this and Stego Handler to OO--could very much inherit from StegoHandler
     {
         public static readonly int CONSTANT_MSG_LEN = (int) Math.Pow(2, 20); //fixed message Length of 1 Megabyte.
 

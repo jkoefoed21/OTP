@@ -17,6 +17,10 @@ namespace Stego_Stuff
     static class StegoHandler
     {
         //IMAGES ARE DEFINED AS COL, ROW
+        //WHEN LOADED INTO AN ARRAY, IMAGES ARE LITTLE ENDIAN. byte 54 is B, 55 is G, 56 is R, 57 is A, then 58 is B2.
+        //in addition, 54-57 is the lower, left corner. this contrasts with Image.getpixel(), which starts in the top left.
+        //knowing this, we can speed the whole process up
+        //would have to decide whether we would want to reindex and rebuild the full system or still focus on a top left oriented approach.
         
         /// <summary>
         /// The length of 128 bits in bytes
@@ -77,10 +81,31 @@ namespace Stego_Stuff
         
         //This is a script to ensure that the generate noise function in fact generates noise. Need to check Alpha somehow.
         
-        /*public static void Main(String[] args)
+        public static void Main(String[] args)
         {
-            Bitmap i = new Bitmap("C:\\Users\\JK\\Pictures\\m1.png");
-            Bitmap i2 = new Bitmap("C:\\Users\\JK\\Pictures\\monocolor.png");
+            Bitmap i = new Bitmap("C:\\Users\\JK\\Pictures\\b2.png");
+            byte[] b = imageToBytes(i);
+            Console.WriteLine("Height: " + i.Height);
+            Console.WriteLine("Width: " + i.Width);
+            Console.WriteLine(b.Length);
+            Console.WriteLine(4 * i.Width * i.Height + 54);
+            for (int ii = 54; ii < 150; ii+=4)
+            {
+                Console.Write((ii - 54) / 4);
+                Console.Write("__");
+                Console.Write("{0:X}", b[ii]);
+                Console.Write("__");
+                Console.Write("{0:X}", b[ii+1]);
+                Console.Write("__");
+                Console.Write("{0:X}", b[ii+2]);
+                Console.Write("__");
+                Console.Write("{0:X}", b[ii+3]);
+
+                Console.WriteLine();
+            }
+            Console.WriteLine("{0:X}",i.GetPixel(0, i.Height-1).ToArgb());
+            Console.ReadKey();
+            /*Bitmap i2 = new Bitmap("C:\\Users\\JK\\Pictures\\monocolor.png");
             int r = 0;
             int g = 0;
             int b = 0;
@@ -120,8 +145,8 @@ namespace Stego_Stuff
             }
             Console.WriteLine("1s: " + tally + " 0s: " + (i.Height * i.Width*3 - tally));
             Console.WriteLine("R change: " + r + " G change: " + g + " B change: " + b);
-            Console.ReadKey();
-        }*/
+            Console.ReadKey();*/
+        }
         
 
         /// <summary>
@@ -310,7 +335,7 @@ namespace Stego_Stuff
                 int rbIndex = 0;
                 for (int ii = 54; ii < bytes.Length; ii++)
                 {
-                    if(ii%4!=1) //no idea why this works, but evidently the first A is in place 53/57
+                    if((ii%4!=1 && BitConverter.IsLittleEndian) || (ii%4!=2 && !BitConverter.IsLittleEndian)) //this is a little endian system never forget
                     {
                         bytes[ii] ^= randomBytes[rbIndex];
                         rbIndex++;
@@ -653,10 +678,15 @@ namespace Stego_Stuff
 
         public static byte[] imageToBytes(Image i) 
         {
+            Image i2 = new Bitmap(i.Width, i.Height, PixelFormat.Format32bppArgb);
+            using (var gr = Graphics.FromImage(i2))
+            {
+                gr.DrawImage(i, new Rectangle(0, 0, i2.Width, i2.Height));
+            }
             //Console.WriteLine("NUM PX "+i.Height * i.Width);
             using (MemoryStream m = new MemoryStream())
             {
-                i.Save(m, ImageFormat.Bmp);
+                i2.Save(m, ImageFormat.Bmp);
                 /*Console.WriteLine("NUM BYTES PREDICTED: " + (4 * Math.Ceiling((double)i.Width / 4.0) * 4 * i.Height + 54));
                 Console.WriteLine("NUM BYTES "+m.ToArray().Length);*/
                 return m.ToArray();
@@ -670,7 +700,7 @@ namespace Stego_Stuff
         }
 
         /// <summary>
-        /// Calculates the available bytes for stego from a pixel count
+        /// Calculates the available bytes for stego from a pixel count. Assumes that the attached AES header will be added.
         /// </summary>
         /// <param name="imgSize"> The pixel count of the image</param>
         /// <returns> The number of available bytes for stego</returns>

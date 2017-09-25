@@ -203,9 +203,9 @@ namespace OTPStuff
                 decryptedOTP = StegoHandler.chopEOF(decryptedOTP);
 
                 byte[] postOTPMsgBytes = OTPHandler.extractEncryptedMessage(decryptedOTP, messageBytes);
-                //check password here
+                //check password here--don't need to w/ no encryption though
 
-                postOTPMsgBytes=AES.decryptionMain(password, postOTPMsgBytes); //I think encrypting this might be useless.
+                //postOTPMsgBytes=AES.decryptionMain(password, postOTPMsgBytes); //I think encrypting this might be useless.
                 byte[] finalMsgBytes=OTPHandler.chopEOF(postOTPMsgBytes);
 
                 File.WriteAllBytes(msgOutPath, finalMsgBytes);
