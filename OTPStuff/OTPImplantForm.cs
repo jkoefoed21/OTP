@@ -102,7 +102,7 @@ namespace OTPStuff
             else
             {
                 FileInfo f = new FileInfo(filePath);
-                if (f.Length > this.possibleSize-OTPHandler.EOF1_LENGTH-1) //have to leave room in the message for the OTP to hit the message.
+                if (f.Length > this.possibleSize-OTPHandler.EOF1_LENGTH-1) //have to leave room in the message for the OTP to hit the message.ear
                 {
                     return "Error: File size exceeds that available in image";
                 }

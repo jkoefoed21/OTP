@@ -44,6 +44,12 @@ namespace encryption
         public static readonly int HASH_LENGTH = 64; //bytes
 
         /// <summary>
+        /// The Length of the num-iterations int.
+        /// </summary>
+
+        //public static readonly int INT_LENGTH = 4;
+
+        /// <summary>
         /// The length of salt, iv, and hash combined
         /// </summary>
         public static readonly int START_LENGTH = SALT_LENGTH + BLOCK_LENGTH + HASH_LENGTH;
